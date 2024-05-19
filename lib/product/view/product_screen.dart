@@ -3,7 +3,9 @@ import 'package:flutter_actual/common/component/pagination_list_view.dart';
 import 'package:flutter_actual/product/component/product_card.dart';
 import 'package:flutter_actual/product/model/product_model.dart';
 import 'package:flutter_actual/product/provider/product_provider.dart';
+import 'package:flutter_actual/restaurant/view/restaurant_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductScreen extends StatelessWidget {
   @override
@@ -11,8 +13,18 @@ class ProductScreen extends StatelessWidget {
     return PaginationListView<ProductModel>(
       provider: productProvider,
       itemBuilder: <ProductModel>(_, index, model) {
-        return ProductCard.fromProductModel(
-          model: model,
+        return GestureDetector(
+          onTap: () {
+            context.goNamed(
+              RestaurantDetailScreen.routeName,
+              pathParameters: {
+                'rid': model.restaurant.id,
+              },
+            );
+          },
+          child: ProductCard.fromProductModel(
+            model: model,
+          ),
         );
       },
     );
