@@ -6,7 +6,7 @@ import 'package:flutter_actual/common/model/token_response.dart';
 import 'package:flutter_actual/common/utils/data_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final authRepositoryProvider = Provider(
+final authRepositoryProvider = Provider<AuthRepository>(
   (ref) {
     final dio = ref.watch(dioProvider);
 

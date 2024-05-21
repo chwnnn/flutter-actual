@@ -34,7 +34,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  void tabListener (){
+  void tabListener() {
     setState(() {
       index = controller.index;
     });
@@ -50,11 +50,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         children: [
           RestaurantScreen(),
           ProductScreen(),
-          Center(
-            child: Container(
-              child: Text('주문'),
-            ),
-          ),
+          Center(child: Container(child: Text('주문'))),
           ProfileScreen(),
         ],
       ),
