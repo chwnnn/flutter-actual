@@ -10,12 +10,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final userMeProvider = StateNotifierProvider<UserMeStateNotifier, UserModelBase?>(
   (ref) {
     final authRepository = ref.watch(authRepositoryProvider);
-    final repository = ref.watch(userMeRepositoryProvider);
+    final userMeRepository = ref.watch(userMeRepositoryProvider);
     final storage = ref.watch(secureStorageProvider);
 
     return UserMeStateNotifier(
       authRepository: authRepository,
-      repository: repository,
+      repository: userMeRepository,
       storage: storage,
     );
   },

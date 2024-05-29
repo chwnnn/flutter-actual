@@ -62,8 +62,10 @@ class CustomInterceptor extends Interceptor {
           'authorization': 'Bearer $token',
         });
       }
-      return super.onRequest(options, handler);
     }
+
+    return super.onRequest(options, handler);
+
   }
 
   // 2) 응답을 받을 때
@@ -77,7 +79,7 @@ class CustomInterceptor extends Interceptor {
 
   // 3) 에러가 났을 때
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     // 401에러가 났을 때(status code)
     // 토큰을 재발급받는 시도를 하고 토큰이 재발급되면
     // 다시 새로운 토큰으로 요청을 한다.
