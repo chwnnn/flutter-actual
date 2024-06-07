@@ -58,6 +58,8 @@ dev_dependencies:
   build_runner: '>=2.3.0 <4.0.0'
   json_serializable: ^6.6.2
   badges: ^2.0.3
+  uuid: ^3.0.6
+  debounce_throttle: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the

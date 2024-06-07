@@ -1,21 +1,62 @@
 import 'package:flutter_actual/product/model/product_model.dart';
 import 'package:flutter_actual/user/model/basket_item_model.dart';
+import 'package:flutter_actual/user/model/patch_basket_body.dart';
+import 'package:flutter_actual/user/repository/user_me_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 
 final basketProvider =
     StateNotifierProvider<BasketProvider, List<BasketItemModel>>(
   (ref) {
-    return BasketProvider();
+    final repository = ref.watch(userMeRepositoryProvider);
+
+    return BasketProvider(
+      repository: repository,
+    );
   },
 );
 
 class BasketProvider extends StateNotifier<List<BasketItemModel>> {
-  BasketProvider() : super([]);
+  final UserMeRepository repository;
+  final updateBasketDebounce = Debouncer(
+    Duration(seconds: 1),
+    initialValue: null,
+    checkEquality: false,
+  );
+
+  BasketProvider({
+    required this.repository,
+  }) : super([]) {
+    updateBasketDebounce.values.listen(
+      (event) {
+        patchBasket();
+      },
+    );
+  }
+
+  Future<void> patchBasket() async {
+    await repository.patchBasket(
+      body: PatchBasketBody(
+        basket: state
+            .map(
+              (e) => PatchBasketBodyBasket(
+                productId: e.product.id,
+                count: e.count,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
 
   Future<void> addToBasket({
     required ProductModel product,
   }) async {
+    // 요청을 보내고
+    // 응답이 오면
+    // 캐시를 업데이트했다
+
     // 1) 아직 장바구니에 해당되는 상품이 없다면
     //    장바구니에 상품을 추가한다.
     // 2) 만약에 이미 들어있다면
@@ -43,6 +84,10 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
         ),
       ];
     }
+
+    // Optimistic Response (긍정적 응답)
+    // 응답이 성공할 거라고 가정하고 상태를 먼저 업데이트함
+    updateBasketDebounce.setValue(null);
   }
 
   Future<void> removeFromBasket({
@@ -82,5 +127,7 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
           )
           .toList();
     }
+
+    updateBasketDebounce.setValue(null);
   }
 }
